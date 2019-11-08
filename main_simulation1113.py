@@ -47,6 +47,7 @@ def handleManual():
   vol.simulationGraph()
   vol.analyseSimulation(True)
   vol.SimulationToPolynomial(True)
+  vol.energies(True)
   plt.show()
 
 def handleSearch():
@@ -86,6 +87,7 @@ def handleSearch():
   s.simulate(sample*2*np.pi,m)
   ymax,tmax = s.analyseSimulation(True)
   s.simulationGraph()
+  s.energies(True)
   erreur = abs(ymax-cherche)/cherche*100
   print("\n le resultat a un taux d erreur de ",erreur,"%\nnous nous excusons pour le resultat imprecis, une nouvelle version du programme fera des recherches plus precises")
   plt.show()

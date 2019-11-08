@@ -149,7 +149,30 @@ class Simulation:
     plt.plot(t,w, label="w [rad/s]")
     plt.xlabel('vitesse radiale en fonction du temps en seconde')
     plt.legend()
-
+  def energies(self,graph=False):
+    t = self.t
+    w = np.empty_like(t)
+    tot = np.empty_like(t)
+    u = np.empty_like(t)
+    cin = np.empty_like(t)
+    w[0] = 0
+    tot[0] = 0
+    u[0] = 0.5*self.I*(self.w[0]**2)
+    for i in range(len(t)-1):
+        u[i] = self.mg*(self.y[i])
+        cin[i] = 0.5*self.m*((self.v[i])**2)
+        w[i] = 0.5*self.I*((self.w[i])**2)
+        tot[i] = u[i] + cin[i] +w[i]
+    if(graph):
+      plt.figure("Graph energies en fonciton du temps")
+      plt.plot(t, cin, label="Energie cinetique")
+      plt.legend()
+      plt.plot(t, u, label="energie potentielle de pesanteur (mgh)")
+      plt.legend()
+      plt.plot(t, w, label="energie cinetique de rotation ")
+      plt.legend()
+      plt.plot(t, tot, label="energies totales (cin + rot+pot)")
+      plt.legend()
   def simulate(self,w0,m):
     """
       Fonciton de simulation, elle simule le vol
