@@ -39,6 +39,11 @@ class Simulation:
     self.dureeMontee = 0
     self.dureeDescente = 0
   def L(self,v):
+    """
+    Calcule la resistance en y.
+    args : v
+    return d*v²
+    """
     return(abs(self.D*v**2))
   def arrayToFunc(self,coefs):
     r = ""
@@ -48,6 +53,13 @@ class Simulation:
       r += " "+str(coefs[-1])
     return(r)
   def analyseSimulation(self,needToPrint=False):
+    """
+      analyse la simulation (trouve les max, duree etc)
+      args :
+      needtoprint (boolean) si oui => affiche les donnees dans le terminal
+      return
+      hauteur max et ca duree composante
+    """
     t,y = self.t,self.y
     maxiIndex = np.argmax(y)
     maxiY = y[maxiIndex]
@@ -63,6 +75,15 @@ class Simulation:
       print("Duree descente [s]",dureeDescente)
     return(maxiY,Tmax)
   def analysePlots(self,t,yByFit,vByFit,aByFit):
+    """
+    graph de la position de la vitesse et de l acceleration en fonciton du temps
+    a partir de la fonction de position en fonction du temps (derivee 2X)
+    args :
+    t [array] temps
+    yByFit [array]tableua de la position
+    vByFit [array]tableau de la vitesse
+    aByFit [array]tableau de l acceleration
+    """
     plt.figure(1)
     plt.subplot(3,1,1)
     plt.title("Donnees par regression polynomiale ")
@@ -79,6 +100,16 @@ class Simulation:
     plt.legend()
 
   def SimulationToPolynomial(self,graph=False):
+    """
+      A partir de la simulation, il fait une regression polynomiale et ensuite derive la fonction pour avoir la vitesse
+      et l acceleration en fonction du temps.
+      Ceci permet une analyse plus simple (vu que c est une fonciton continue) des donnees
+      args :
+      graph (boolean), default: false , si true affiche les graph
+      returns
+      humanEqY array des coefficient d un polynome de degre 3
+
+    """
     t,y = self.t,self.y
     humanEqY = np.polyfit(t,y,3)
     eqYFit = np.polyfit(t,y,20)
@@ -96,6 +127,7 @@ class Simulation:
       self.analysePlots(t,yByFit,vByFit,aByFit)
     self.yByFit,self.vByFit,self.aByFit,self.humanEqY = yByFit,vByFit,aByFit,humanEqY
     print("Fonction polynomiale de la hauteur en fonction du temps entre [0 - "+str(t[-1])+"]:",self.arrayToFunc(humanEqY))
+    return(humanEqY)
 
   def simulationGraph(self):
     t,y,v,w,a = self.t,self.y,self.v,self.w,self.a
@@ -119,6 +151,17 @@ class Simulation:
     plt.legend()
 
   def simulate(self,w0,m):
+    """
+      Fonciton de simulation, elle simule le vol
+      args:
+      w0 , float, vitesse radial [radian/s] de l helice
+      m, masse en kg de la charge + la masse de l helice
+      return
+        - le tableau position en fonction du temps
+        - le tableau vitesse en fonction du temps
+        - le tableau acceleration en fonction du temps
+        - le tableau vitesse radiale  en fonction du temps
+    """
     self.m = m
     self.mg = m * self.g
     self.t = np.arange(0, self.end, self.step)
@@ -145,6 +188,7 @@ class Simulation:
       self.y[i+1] = self.y[i] +self.v[i]*dt+ (self.a[i]*dt**2)/2
       self.v[i+1] = self.v[i]  + self.a[i]*dt
       self.w[i+1] = self.w[i]  -(Q/self.I)*dt
+    return self.y,self.v,self.a,self.w
 
 # je laisse ca ici pour si qq un doit debugger la classe
 # g = 9.81
