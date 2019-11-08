@@ -4,8 +4,17 @@ import numpy as np
 import propeller
 
 class Simulation:
-  """docstring for Simulation"""
-  def __init__(self,bladeGeom,I,end=80,step=0.1):
+  """
+  Class qui gere tout ce qui touche a la simulation,
+  aucune programmation defensive n a ete faite, donc merci d appeler les foncitons dans l ordre suivant
+  - init de la classe
+  - simulate (lance la simulation)
+  - analyseSimulation analyse la simulaiton
+  - simulationGraph les graphiques de la simulation
+  - simulationTopolynomial : trouve la fonction de la position par regression et ensuite la vitesse et l acceleration par derive
+  - analyseplots : affiche les graph des fonctions regresses
+  """
+  def __init__(self,bladeGeom,I,step=0.1,end=80):
     super(Simulation, self).__init__()
     self.m = 0
     self.I = I
@@ -136,6 +145,8 @@ class Simulation:
       self.y[i+1] = self.y[i] +self.v[i]*dt+ (self.a[i]*dt**2)/2
       self.v[i+1] = self.v[i]  + self.a[i]*dt
       self.w[i+1] = self.w[i]  -(Q/self.I)*dt
+
+# je laisse ca ici pour si qq un doit debugger la classe
 # g = 9.81
 # m = 0.027
 # I = 0.5*0.027*0.0875**2
