@@ -37,4 +37,41 @@ def handleManual():
   vol.SimulationToPolynomial(True)
   plt.show()
 
-handleManual()
+def handleSearch():
+  trouve = 0
+  last = 0
+  cherche = 3
+  m = 0.027 + askCharge()
+  regress = []
+  print("Creation de la regression a basse precision pour cette masse")
+  s = simulation.Simulation(bladeGeom,I)
+  fastRange = range(30,100,7)
+  for i in fastRange:
+    w = i*2*np.pi
+    s.simulate(w,m)
+    ymax,tmax = s.analyseSimulation()
+    regress.append(ymax)
+  fastResearch = np.polyfit(regress,list(fastRange),4)
+  eqRecherche = np.poly1d(fastResearch)
+  print("Régression termine, quelle hauteur chercher vous (m) ?")
+  cherche = int(input(">>"))
+  sample = eqRecherche(cherche)
+  print("Nous vous proposons une vitesse de ",sample,"tour / seconde")
+  print("Qui vous donnerait")
+  s.simulate(sample*2*np.pi,m)
+  s.analyseSimulation(True)
+  print("nous nous excusons pour le resultat imprecis, une nouvelle version du programme fera des recherches plus precises")
+  plt.show()
+def dispatch():
+  c = input("""
+Que voulez vous faire ?
+Appuyez sur
+1 si vous chercher la hauteur a partir de la vitesse de l helice
+2 si vous chercher la vitesse de l'helice pour une hauteur (beta)
+>>""")
+  if(c=="1"):
+    handleManual()
+  else:
+    handleSearch()
+dispatch()
+#handleManual()

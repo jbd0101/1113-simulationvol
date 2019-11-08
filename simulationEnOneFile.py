@@ -11,7 +11,7 @@ I = 0.5*0.027*0.0875**2
 bladeGeom = np.array([[0.0135, np.pi/9, 0.025], [0.0730, np.pi/9, 0.039]])
 D=0.001
 
-step = 0.01     # pas (dt) [s]
+step = 0.1     # pas (dt) [s]
 end = 80       # durée [s] max le programme s'arrete si y<0
 
 t = np.arange(0, end, step)

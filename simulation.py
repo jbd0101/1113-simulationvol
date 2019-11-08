@@ -111,7 +111,12 @@ class Simulation:
 
   def simulate(self,w0,m):
     self.m = m
-    self.mg = self.m * self.g
+    self.mg = m * self.g
+    self.t = np.arange(0, self.end, self.step)
+    self.v = np.empty_like(self.t)
+    self.w = np.empty_like(self.t)
+    self.y = np.empty_like(self.t)
+    self.a = np.empty_like(self.t)
     self.w0 = w0
     self.v[0]=0
     self.y[0]=0
@@ -127,7 +132,7 @@ class Simulation:
         self.a = self.a[0:i]
         break
       T,Q =propeller.thrustTorque(self.w[i],self.v[i],3,self.bladeGeom)
-      self.a[i] = (T-(self.mg+self.L(self.v[i])))/self.m
+      self.a[i+1] = (T-(self.mg+self.L(self.v[i])))/self.m
       self.y[i+1] = self.y[i] +self.v[i]*dt+ (self.a[i]*dt**2)/2
       self.v[i+1] = self.v[i]  + self.a[i]*dt
       self.w[i+1] = self.w[i]  -(Q/self.I)*dt
