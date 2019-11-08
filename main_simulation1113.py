@@ -1,3 +1,9 @@
+"""
+Code du groupe 11.13.
+une nouvelle version est peut-etre disponible sur github.
+https://github.com/jbd0101/1113-simulationvol
+"""
+
 import math
 import matplotlib.pyplot as plt
 import numpy as np
