@@ -79,6 +79,7 @@ class Simulation:
       print("Temps au maximum [s]:",Tmax)
       print("Duree montee [s]",dureeMontee)
       print("Duree descente [s]",dureeDescente)
+      print("Volt a entrer :",Helper.toursEnVolt(Helper.radEnTours(self.w0)))
     return(maxiY,Tmax)
   def analysePlots(self,t,yByFit,vByFit,aByFit):
     """
@@ -218,6 +219,24 @@ class Simulation:
       self.v[i+1] = self.v[i]  + self.a[i]*dt
       self.w[i+1] = self.w[i]  -(Q/self.I)*dt
     return self.y,self.v,self.a,self.w
+
+
+class Helper:
+  def __init__(self):
+    super(Helper, self).__init__()
+
+  @staticmethod
+  def radEnTours(w):
+    return((w/(2*np.pi)))
+  @staticmethod
+  def ToursHeliceVersToursMoteur(tours):
+    return(tours/9) #radio 1:3 ,1:3 => *9
+  @staticmethod
+  def toursEnVolt(tours):
+    print("Pour ",tours,"t/s")
+    tours = Helper.ToursHeliceVersToursMoteur(tours)
+    volt = (tours+0.567)/1.22 #regression lineaire venant de excel
+    return volt
 
 # je laisse ca ici pour si qq un doit debugger la classe
 # g = 9.81
