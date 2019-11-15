@@ -20,7 +20,7 @@ class Simulation:
   - simulationTopolynomial : trouve la fonction de la position par regression et ensuite la vitesse et l acceleration par derive
   - analyseplots : affiche les graph des fonctions regresses
   """
-  def __init__(self,bladeGeom,I,step=0.1,end=80):
+  def __init__(self,bladeGeom,I,step=0.01,end=80):
     super(Simulation, self).__init__()
     self.m = 0
     self.I = I
@@ -180,7 +180,7 @@ class Simulation:
       plt.legend()
       plt.plot(t, tot, label="energies totales (cin + rot+pot)")
       plt.legend()
-  def simulate(self,w0,m):
+  def simulate(self,w0,m,stop_at_middle=False):
     """
       Fonciton de simulation, elle simule le vol
       args:
@@ -206,13 +206,16 @@ class Simulation:
     self.a[0]=0
     for i in range(len(self.t)-1):
       dt = self.step
-      if(self.y[i] < 0 and i > 0):
+      if((self.y[i] < 0 and i > 0) or (stop_at_middle and i>5 and self.y[i]< self.y[i-1])):
         self.t = self.t[0:i]
         self.v = self.v[0:i]
         self.w = self.w[0:i]
         self.y = self.y[0:i]
         self.a = self.a[0:i]
-        break
+        if(stop_at_middle):
+          return(self.y[-1])
+        else:
+          break
       T,Q =propeller.thrustTorque(self.w[i],self.v[i],3,self.bladeGeom)
       self.a[i+1] = (T-(self.mg+self.L(self.v[i])))/self.m
       self.y[i+1] = self.y[i] +self.v[i]*dt+ (self.a[i]*dt**2)/2

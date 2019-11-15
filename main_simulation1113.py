@@ -49,7 +49,7 @@ def handleManual():
 
   mVol = askCharge() + m
   w0 = w0*2*np.pi
-  vol.simulate(w0,mVol)
+  vol.simulate(w0,mVol,False)
   vol.simulationGraph()
   vol.analyseSimulation(True)
   vol.SimulationToPolynomial(True)
@@ -67,36 +67,37 @@ def handleSearch():
 
   """
   minimum = 30
-  maximum = 150
+  maximum = 100
   steps = 5
   trouve = 0
   last = 0
-  cherche = 3
   m = 0.027 + askCharge()
   regress = []
   print("Creation de la regression a basse precision pour cette masse")
-  s = simulation.Simulation(bladeGeom,I,0.2)
+  s = simulation.Simulation(bladeGeom,I,0.1)
+  cherche= 100
   fastRange = range(minimum,maximum,steps)
   for i in fastRange:
     w = i*2*np.pi
-    s.simulate(w,m)
-    ymax,tmax = s.analyseSimulation()
+    ymax = s.simulate(w,m,True)
+    print(ymax)
     regress.append(ymax)
-  fastResearch = np.polyfit(regress,list(fastRange),10)
+  fastResearch = np.polyfit(regress,list(fastRange),5)
   eqRecherche = np.poly1d(fastResearch)
   print("Régression termine, quelle hauteur chercher vous (m) ?")
-  cherche = float(input(">>"))
-  sample = eqRecherche(cherche)
-  print("Nous vous proposons une vitesse de ",sample,"tour / seconde")
-  print("Qui vous donnerait")
-  s = simulation.Simulation(bladeGeom,I,0.01)
-  s.simulate(sample*2*np.pi,m)
-  ymax,tmax = s.analyseSimulation(True)
-  s.simulationGraph()
-  s.energies(True)
-  erreur = abs(ymax-cherche)/cherche*100
-  print("\n le resultat a un taux d erreur de ",erreur,"%\nnous nous excusons pour le resultat imprecis, une nouvelle version du programme fera des recherches plus precises")
-  plt.show()
+  while cherche > 0:
+    cherche = float(input(">>"))
+    sample = eqRecherche(cherche)
+    print("Nous vous proposons une vitesse de ",sample,"tour / seconde")
+    print("Qui vous donnerait")
+    s = simulation.Simulation(bladeGeom,I,0.01)
+    s.simulate(sample*2*np.pi,m)
+    ymax,tmax = s.analyseSimulation(True)
+    s.simulationGraph()
+    s.energies(True)
+    erreur = abs(ymax-cherche)/cherche*100
+    print("\n le resultat a un taux d erreur de ",erreur,"%\nnous nous excusons pour le resultat imprecis, une nouvelle version du programme fera des recherches plus precises")
+    plt.show()
 
 
 def dispatch():
