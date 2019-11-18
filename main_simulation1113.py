@@ -82,9 +82,10 @@ def handleSearch():
     ymax = s.simulate(w,m,True)
     print(ymax)
     regress.append(ymax)
-  fastResearch = np.polyfit(regress,list(fastRange),5)
+  fastResearch = np.polyfit(regress,list(fastRange),11)
   eqRecherche = np.poly1d(fastResearch)
   print("Régression termine, quelle hauteur chercher vous (m) ?")
+
   while cherche > 0:
     cherche = float(input(">>"))
     sample = eqRecherche(cherche)
