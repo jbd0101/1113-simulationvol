@@ -15,7 +15,7 @@ import simulation
 m = 0.032
 I = 0.5*0.032*0.0875**2
 # bladeGeom = np.array([[0.0135, np.pi/9, 0.025], [0.0730, np.pi/9, 0.039]])
-bladeGeom = np.array([[0.0135, np.pi/11.07, 0.025], [0.0820, np.pi/11.07, 0.039]])
+bladeGeom = np.array([[0.0135, np.pi/10.87, 0.025], [0.0820, np.pi/10.87, 0.039]])
 
 vol = simulation.Simulation(bladeGeom,I)
 
@@ -46,13 +46,15 @@ def handleManual():
     graphs, analyse de la simulation, regression de la simulation
   """
   w0 = int(input("Afficheur> "))
+  minBound= float(input("borne min (m)>> "))
+  maxBound= float(input("borne max (m) >> "))
   w0 = (w0*4.352)-10.7715
   mVol = askCharge() + m
   w0 = w0*2*np.pi
   vol.simulate(w0,mVol,False)
   vol.simulationGraph()
   vol.analyseSimulation(True)
-  vol.SimulationToPolynomial(True)
+  vol.SimulationToPolynomial(minBound,maxBound,True)
   vol.energies(True)
   plt.show()
 

@@ -81,7 +81,7 @@ class Simulation:
       print("Duree descente [s]",dureeDescente)
       print("Volt a entrer :",Helper.toursEnVolt(Helper.radEnTours(self.w0)))
     return(maxiY,Tmax)
-  def analysePlots(self,t,yByFit,vByFit,aByFit):
+  def analysePlots(self,t,yByFit,vByFit,aByFit,minBound,maxBound):
     """
     graph de la position de la vitesse et de l acceleration en fonciton du temps
     a partir de la fonction de position en fonction du temps (derivee 2X)
@@ -95,6 +95,8 @@ class Simulation:
     plt.subplot(3,1,1)
     plt.title("Donnees par regression polynomiale ")
     plt.plot(t,yByFit, label="y [m]")
+    plt.plot(t,(t/t)+minBound-1,'--c')
+    plt.plot(t,(t/t)+maxBound-1,'--c')
     plt.xlabel('Position en Y en fonction du temps en seconde')
     plt.legend()
     plt.subplot(3,1,2)
@@ -106,7 +108,7 @@ class Simulation:
     plt.xlabel('acceleration en Y en fonction du temps en seconde (dérivée de A)')
     plt.legend()
 
-  def SimulationToPolynomial(self,graph=False):
+  def SimulationToPolynomial(self,minBound=0,maxBound=0,graph=False):
     """
       A partir de la simulation, il fait une regression polynomiale et ensuite derive la fonction pour avoir la vitesse
       et l acceleration en fonction du temps.
@@ -126,14 +128,19 @@ class Simulation:
     yByFit = []
     vByFit = []
     aByFit = []
+    tBetweenBounds =0
     for i in range(len(t)):
-      yByFit.append(eqYPolynomial(t[i]))
+      pos = eqYPolynomial(t[i])
+      if(minBound<=pos and maxBound>=pos):
+        tBetweenBounds += self.step
+      yByFit.append(pos)
       vByFit.append(eqVPolynomial(t[i]))
       aByFit.append(eqAPolynomial(t[i]))
     if graph:
-      self.analysePlots(t,yByFit,vByFit,aByFit)
+      self.analysePlots(t,yByFit,vByFit,aByFit,minBound,maxBound)
     self.yByFit,self.vByFit,self.aByFit,self.humanEqY = yByFit,vByFit,aByFit,humanEqY
     print("Fonction polynomiale de la hauteur en fonction du temps entre [0 - "+str(t[-1])+"]:",self.arrayToFunc(humanEqY))
+    print("Duree entre la borne {} et {} : {} s".format(minBound,maxBound,tBetweenBounds))
     return(humanEqY)
 
   def simulationGraph(self):
