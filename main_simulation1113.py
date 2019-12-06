@@ -12,10 +12,10 @@ import simulation
 
 
 #statics
-m = 0.027
-I = 0.5*0.027*0.0875**2
-bladeGeom = np.array([[0.0135, np.pi/9, 0.025], [0.0730, np.pi/9, 0.039]])
-
+m = 0.032
+I = 0.5*0.032*0.0875**2
+# bladeGeom = np.array([[0.0135, np.pi/9, 0.025], [0.0730, np.pi/9, 0.039]])
+bladeGeom = np.array([[0.0135, np.pi/11.07, 0.025], [0.0820, np.pi/11.07, 0.039]])
 
 vol = simulation.Simulation(bladeGeom,I)
 
@@ -45,8 +45,8 @@ def handleManual():
   return:
     graphs, analyse de la simulation, regression de la simulation
   """
-  w0 = int(input("Vitesse en tour/seconde de l'helice > "))
-
+  w0 = int(input("Afficheur> "))
+  w0 = (w0*4.352)-10.7715
   mVol = askCharge() + m
   w0 = w0*2*np.pi
   vol.simulate(w0,mVol,False)
@@ -71,7 +71,7 @@ def handleSearch():
   steps = 5
   trouve = 0
   last = 0
-  m = 0.027 + askCharge()
+  m = 0.032 + askCharge()
   regress = []
   print("Creation de la regression a basse precision pour cette masse")
   s = simulation.Simulation(bladeGeom,I,0.1)

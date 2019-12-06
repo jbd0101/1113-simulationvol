@@ -238,8 +238,8 @@ class Helper:
   def toursEnVolt(tours):
     print("Pour ",tours,"t/s")
     tours = Helper.ToursHeliceVersToursMoteur(tours)
-    volt = (tours+0.567)/1.22 #regression lineaire venant de excel
-    return volt
+    afficheur = (tours+10.7715)/4.352 #regression lineaire venant de excel
+    return afficheur
 
 # je laisse ca ici pour si qq un doit debugger la classe
 # g = 9.81
